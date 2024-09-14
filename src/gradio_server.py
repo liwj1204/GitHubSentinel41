@@ -1,5 +1,4 @@
 import gradio as gr  # 导入gradio库用于创建GUI
-
 from config import Config  # 导入配置管理模块
 from github_client import GitHubClient  # 导入用于GitHub API操作的客户端
 from hacker_news_client import HackerNewsClient

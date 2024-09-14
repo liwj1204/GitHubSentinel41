@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from logger import LOG  # 导入日志模块
 
 class ReportGenerator:
@@ -79,7 +80,7 @@ class ReportGenerator:
 
     def _aggregate_topic_reports(self, directory_path):
         """
-        聚合目录下所有以 '_topic.md' 结尾的 Markdown 文件内容，生成每日汇总报告的输入。
+        聚合目下所有以 '_topic.md' 结尾的 Markdown 文件内容，生成每日汇总报告的输入。
         """
         markdown_content = ""
         for filename in os.listdir(directory_path):
@@ -88,6 +89,29 @@ class ReportGenerator:
                     markdown_content += file.read() + "\n"
         return markdown_content
 
+
+    def generate_ai_news_report(self, news_file_path):
+        LOG.info(f"正在生成 AI 新闻报告，文件路径：{news_file_path}")
+        with open(news_file_path, 'r', encoding='utf-8') as file:
+            content = file.read()
+
+        system_prompt = self.prompts.get("ai_new")
+        LOG.info(f"system_prompt: {system_prompt}")
+        report = self.llm.generate_report(system_prompt, content)
+        
+        # Generate a filename based on the current date
+        current_date = datetime.now().strftime('%Y-%m-%d')
+        report_file_path = f'ai_news/report_{current_date}.md'
+        
+        # Ensure the ai_news directory exists
+        os.makedirs('ai_news', exist_ok=True)
+        
+        # Write the report to the file
+        with open(report_file_path, 'w', encoding='utf-8') as file:
+            file.write(report)
+        
+        LOG.info(f"AI 新闻报告已保存到 {report_file_path}")
+        return report, report_file_path
 
 if __name__ == '__main__':
     from config import Config  # 导入配置管理类

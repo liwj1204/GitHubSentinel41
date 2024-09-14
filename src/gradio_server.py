@@ -15,6 +15,7 @@ hacker_news_client = HackerNewsClient() # 创建 Hacker News 客户端实例
 ai_news_client = AINewsClient()
 subscription_manager = SubscriptionManager(config.subscriptions_file)
 
+
 def generate_github_report(model_type, model_name, repo, days):
     config.llm_model_type = model_type
 
